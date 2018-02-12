@@ -3,7 +3,7 @@
 # Используем самый простой алгоритм с циклом while и параллельным присваиванием переменных
 output_arr = []
 num_a, num_b = 1, 1
-to_num = 1000
+to_num = 100
 
 while num_a < to_num
   print "#{num_a} "

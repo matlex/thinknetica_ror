@@ -13,7 +13,7 @@ year = gets.to_i
 # Каждый элемент соответсвует кол-ву дней в каждом месяце года
 days_in_months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
-if day > days_in_months[month] || day == 0
+if day > days_in_months[month-1] || day == 0
   puts 'Enter correct day'
 elsif
   month == 0 || month > days_in_months.size
