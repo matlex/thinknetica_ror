@@ -11,14 +11,10 @@ class Station
 
   def add(train)
     @trains << train
-    # дополнительно назначает текущую станцию объекту train
-    train.current_station = self
   end
 
   def remove(train)
     @trains.delete(train)
-    # дополнительно убирает текущую станцию у объекта train
-    train.current_station = nil
   end
 
   def all_trains_count
@@ -56,7 +52,6 @@ end
 
 class Train
   attr_reader :type, :number, :wagons, :current_speed
-  attr_accessor :current_station
 
   def initialize(number, type, wagons)
     @number = number
@@ -85,44 +80,41 @@ class Train
     @wagons -= 1 if @current_speed == 0 && @wagons > 0
   end
 
+  def current_station
+    @route.stations[@current_station_index]
+  end
+
   def add_route(route)
     @route = route
+    @current_station_index = 0
     # Добавим в первую станцию маршрута наш поезд
-    route.stations.first.add(self)
+    current_station.add(self)
   end
 
   def next_station
-    @route.stations[station_index(@current_station) + 1] if @route
+    @route.stations[@current_station_index + 1] if @route
   end
 
   def previous_station
-    if @route && @current_station != @route.stations.first
-      @route.stations[station_index(@current_station) - 1]
+    if @route && current_station != @route.stations.first
+      @route.stations[@current_station_index - 1]
     end
   end
 
   def move_to_next_station
-    found_next_station = next_station
-    if found_next_station
-      @current_station.remove(self)
-      # @current_station проставится в методе add_train у станции
-      found_next_station.add(self)
+    if next_station
+      current_station.remove(self)
+      @current_station_index += 1
+      current_station.add(self)
     end
   end
 
   def move_to_previous_station
-    found_previous_station = previous_station
-    if found_previous_station
-      @current_station.remove(self)
-      # @current_station проставится в методе add_train у станции
-      found_previous_station.add(self)
+    if previous_station
+      current_station.remove(self)
+      @current_station_index -= 1
+      current_station.add(self)
     end
-  end
-
-  private
-
-  def station_index(station)
-    @route.stations.find_index(station)
   end
 end
 
@@ -162,15 +154,13 @@ train1.remove_wagon
 puts train1.wagons
 puts
 
-# Пригоним поезд на станцию, но без назначения маршрута
-station1.add(train3)
-puts train3.current_station.name
-
 # Поиграемся с маршрутом у поезда
 puts train1.next_station
 puts train1.previous_station
 
 train1.add_route(route1)
+train2.add_route(route1)
+train3.add_route(route1)
 puts train1.current_station.name
 
 puts train1.next_station.name
@@ -192,8 +182,6 @@ train1.move_to_previous_station
 train1.move_to_previous_station
 puts train1.current_station.name
 
-station1.add(train2)
-puts
 
 station1.trains.each { |train| puts train.number }
 puts station1.all_trains_count
@@ -201,6 +189,9 @@ puts
 puts station1.count_trains_by_type('Пассажирский')
 puts station1.count_trains_by_type('Грузовой')
 puts
-station1.remove(train2)
+
+train2.move_to_next_station
+train3.move_to_next_station
+
 station1.trains.each { |train| puts train.number }
 puts station1.all_trains_count
