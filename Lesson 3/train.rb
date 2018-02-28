@@ -25,8 +25,8 @@ class Station
     @trains.size
   end
 
-  def count_trains_by_type(train_type)
-    @trains.select{ |train| train.type == train_type }.size
+  def count_trains_by_type(type)
+    @trains.select{ |train| train.type == type }.size
   end
 end
 
