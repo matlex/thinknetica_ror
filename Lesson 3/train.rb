@@ -26,7 +26,7 @@ class Station
   end
 
   def count_trains_by_type(type)
-    @trains.select{ |train| train.type == type }.size
+    @trains.select { |train| train.type == type }.size
   end
 end
 
@@ -38,7 +38,7 @@ class Route
   end
 
   def show_stations
-    @stations.each_with_index { |station, index| puts "#{index + 1}: #{station.name}"}
+    @stations.each_with_index { |station, index| puts "#{index + 1}: #{station.name}" }
   end
 
   def add_intermediate_station(new_station)
@@ -91,44 +91,39 @@ class Train
     route.stations.first.add(self)
   end
 
-  def get_next_station
-    @route.stations[station_index_from_route(@current_station) + 1] if @route
+  def next_station
+    @route.stations[station_index(@current_station) + 1] if @route
   end
 
-  def get_previous_station
+  def previous_station
     if @route && @current_station != @route.stations.first
-      @route.stations[station_index_from_route(@current_station) - 1]
+      @route.stations[station_index(@current_station) - 1]
     end
   end
 
   def move_to_next_station
-    next_station = get_next_station
-    if next_station
+    found_next_station = next_station
+    if found_next_station
       @current_station.remove(self)
       # @current_station проставится в методе add_train у станции
-      next_station.add(self)
+      found_next_station.add(self)
     end
   end
 
   def move_to_previous_station
-    previous_station = get_previous_station
-    if previous_station
+    found_previous_station = previous_station
+    if found_previous_station
       @current_station.remove(self)
       # @current_station проставится в методе add_train у станции
-      previous_station.add(self)
+      found_previous_station.add(self)
     end
   end
 
   private
 
-  def route_station_by_index(station_index)
-    @route.stations[station_index]
-  end
-
-  def station_index_from_route(station)
+  def station_index(station)
     @route.stations.find_index(station)
   end
-
 end
 
 # Создаем станции
@@ -172,21 +167,21 @@ station1.add(train3)
 puts train3.current_station.name
 
 # Поиграемся с маршрутом у поезда
-puts train1.get_next_station
-puts train1.get_previous_station
+puts train1.next_station
+puts train1.previous_station
 
 train1.add_route(route1)
 puts train1.current_station.name
 
-puts train1.get_next_station.name
-puts train1.get_previous_station&.name
+puts train1.next_station.name
+puts train1.previous_station&.name
 
 train1.move_to_next_station
-puts train1.get_previous_station.name
+puts train1.previous_station.name
 puts train1.current_station.name
 
 train1.move_to_next_station
-puts train1.get_previous_station.name
+puts train1.previous_station.name
 puts train1.current_station.name
 
 train1.move_to_next_station
