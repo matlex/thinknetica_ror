@@ -1,3 +1,6 @@
+require_relative 'train'
+require_relative 'passenger_wagon'
+
 class PassengerTrain < Train
   # Проверку типа вагона выносим в private т.к. будет проверяться только внутри класса.
   private
