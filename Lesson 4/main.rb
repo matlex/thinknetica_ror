@@ -22,6 +22,7 @@ class Main
       show_possible_actions
       choice = gets.chomp
       case choice
+        when '0' then show_possible_actions
         when '1' then create_station
         when '2' then create_passenger_train
         when '3' then create_cargo_train
@@ -35,7 +36,7 @@ class Main
         when '11' then train_move_backward
         when '12' then show_trains_in_station
         else
-          show_possible_actions
+          break
       end
       puts '...'
     end
@@ -188,6 +189,7 @@ class Main
     puts 'Enter 10 to move a train to the next station'
     puts 'Enter 11 to move a train to the previous station'
     puts 'Enter 12 to print out stations and trains lists'
+    puts 'Enter 0 to show menu again'
     puts 'Enter anything else to exit'
   end
 
