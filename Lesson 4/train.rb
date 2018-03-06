@@ -75,4 +75,12 @@ class Train
     end
   end
 
+  def correct_type?(wagon)
+    wagon.is_a?(correct_wagon_type)
+  end
+
+  def correct_wagon_type
+    # Переопределяется в дочерних классах
+  end
+
 end

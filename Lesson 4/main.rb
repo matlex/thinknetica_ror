@@ -68,15 +68,14 @@ class Main
   end
 
   def route_create
-    if !@stations.empty?
-      print_stations
-      puts 'Choose number for first station'
-      station1 = @stations[gets.to_i - 1]
-
+    if @stations.empty? || @stations.size == 1
+      puts 'You have no stations or just one, but the route needs two stations'
+    else
+      puts 'FIRST station:'
+      station1 = select_station
       loop do
-        print_stations
-        puts 'Choose number for second station'
-        station2 = @stations[gets.to_i - 1]
+        puts 'SECOND station:'
+        station2 = select_station
         if station2 != station1
           route = Route.new(station1, station2)
           @routes << route
@@ -86,8 +85,6 @@ class Main
           puts "You can't set second station same as first."
         end
       end
-    else
-      puts 'You have no any stations yet'
     end
   end
 
