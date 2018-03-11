@@ -9,6 +9,7 @@ class Main
     @stations = []
     @trains = []
     @routes = []
+    @wagons = []
   end
 
   def run
@@ -35,6 +36,8 @@ class Main
         when '10' then train_move_forward
         when '11' then train_move_backward
         when '12' then show_trains_in_station
+        when '13' then create_wagon
+        when '14' then print_wagons
         else
           break
       end
@@ -65,6 +68,21 @@ class Main
     train = CargoTrain.new(number, 'Cargo')
     @trains << train
     puts "#{train.type} train No #{train.number} successfully created!"
+  end
+
+  def create_wagon
+    puts 'What type of wagon you want create? a: CargoWagon, b: PassengerWagon'
+    wagon_type = gets.chomp
+    case wagon_type
+      when 'a'
+        @wagons << CargoWagon.new
+      when 'b'
+        @wagons << PassengerWagon.new
+      else
+        puts 'Choose right type of wagon'
+        return
+    end
+    puts 'Wagon successfully created'
   end
 
   def route_create
@@ -114,14 +132,19 @@ class Main
   end
 
   def add_train_wagon
+    unless @wagons.any?
+      puts 'Please create any wagon first'
+      return
+    end
+
     train = select_train
     if train
-      if train.class == CargoTrain
-        train.add_wagon(CargoWagon.new)
+      wagon = select_wagon
+      if train.class == CargoTrain && wagon.class == CargoWagon
+        train.add_wagon(wagon)
       else
-        train.add_wagon(PassengerWagon.new)
+        train.add_wagon(wagon)
       end
-      puts "Wagon successfully added to train No #{train.number}"
     end
   end
 
@@ -170,6 +193,10 @@ class Main
     @trains.each.with_index(1) {|train, index| puts "#{index}: #{train.number}: #{train.type}"}
   end
 
+  def print_wagons
+    @wagons.each.with_index(1) {|wagon, index| puts "#{index}: #{wagon.class.name}"}
+  end
+
   def show_possible_actions
     puts
     puts "Please choose one of actions listed below:"
@@ -186,6 +213,8 @@ class Main
     puts 'Enter 10 to move a train to the next station'
     puts 'Enter 11 to move a train to the previous station'
     puts 'Enter 12 to print out stations and trains lists'
+    puts 'Enter 13 to create wagon'
+    puts 'Enter 14 to print out wagons list'
     puts 'Enter 0 to show menu again'
     puts 'Enter anything else to exit'
   end
@@ -231,6 +260,17 @@ class Main
       @trains[user_choice - 1]
     else
       puts 'Choose a correct number for train'
+    end
+  end
+
+  def select_wagon
+    puts 'Choose wagon:'
+    print_wagons
+    user_choice = gets.to_i
+    if user_choice <= @wagons.size
+      @wagons[user_choice - 1]
+    else
+      puts 'Choose a correct number for wagon'
     end
   end
 end

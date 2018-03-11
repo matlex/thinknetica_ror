@@ -23,6 +23,7 @@ class Train
   def add_wagon(wagon)
     if @current_speed == 0 && correct_type?(wagon)
       @wagons << wagon
+      puts "Wagon successfully added to train No #{self.number}"
     else
       puts 'Too high speed or incorrect wagon type'
     end
