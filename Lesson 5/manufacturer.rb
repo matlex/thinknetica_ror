@@ -1,3 +1,9 @@
 module Manufacturer
-  attr_accessor :manufacturer_title
+  def add_manufacturer(title)
+    @title = title
+  end
+
+  def manufacturer_title
+    @title
+  end
 end

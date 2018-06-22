@@ -97,8 +97,3 @@ class Train
   end
 
 end
-
-t1 = Train.new(112233, "Passager")
-t2 = Train.new(445566, "Weight")
-
-puts t1
