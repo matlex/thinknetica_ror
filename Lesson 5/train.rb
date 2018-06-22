@@ -1,11 +1,23 @@
+require_relative 'instance_counter'
+
 class Train
+  include InstanceCounter
+
   attr_reader :type, :number, :wagons, :current_speed
+
+  @@trains = {}
 
   def initialize(number, type)
     @number = number
     @type = type
     @wagons = []
     @current_speed = 0
+    @@trains[number] = self
+    register_instance
+  end
+
+  def self.find(number)
+    @@trains.fetch(number, nil)
   end
 
   def speed_up(speed)
@@ -85,3 +97,8 @@ class Train
   end
 
 end
+
+t1 = Train.new(112233, "Passager")
+t2 = Train.new(445566, "Weight")
+
+puts t1
