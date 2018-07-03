@@ -14,6 +14,15 @@ class Station
     @trains = []
     @@all_stations += 1
     register_instance
+    validate!
+  end
+
+  def valid?
+    begin
+      validate!
+    rescue
+      false
+    end
   end
 
   def add(train)
@@ -36,5 +45,11 @@ class Station
 
   def count_trains_by_type(type)
     @trains.select { |train| train.type == type }.size
+  end
+
+  def validate!
+    raise ValidationError, "Number can't be nil" if name.nil?
+    raise ValidationError, "Station title should be at least 3 symbols" unless name.length < 3
+    true
   end
 end
