@@ -31,15 +31,11 @@ class Route
 
   def add_intermediate_station(new_station)
     @stations.insert(-2, new_station)
-    puts "Station successfully added to: \"#{self.title}\""
   end
 
   def remove_intermediate_station(station)
     if not [@stations.first, @stations.last].include? station
       @stations.delete(station)
-      puts "Station successfully removed from: \"#{self.title}\""
-    else
-      puts "Can't delete first or last stations."
     end
   end
 

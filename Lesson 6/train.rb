@@ -50,17 +50,12 @@ class Train
   def add_wagon(wagon)
     if @current_speed == 0 && correct_type?(wagon)
       @wagons << wagon
-      puts "Wagon successfully added to train No #{self.number}"
-    else
-      puts 'Too high speed or incorrect wagon type'
     end
   end
 
   def remove_wagon
     if @current_speed == 0 && !@wagons.empty?
       @wagons.pop
-    else
-      puts 'Too high speed or nothing to remove'
     end
   end
 
