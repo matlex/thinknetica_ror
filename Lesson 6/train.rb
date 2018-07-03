@@ -1,9 +1,15 @@
 require_relative 'instance_counter'
+require_relative 'custom_errors'
 
 class Train
   include InstanceCounter
+  include CustomErrors
 
   attr_reader :type, :number, :wagons, :current_speed
+
+  POSSIBLE_TRAIN_TYPES = ['Passenger', 'Cargo']
+
+  NUMBER_FORMAT_PATTERN = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i
 
   @@trains = {}
 
@@ -14,10 +20,19 @@ class Train
     @current_speed = 0
     @@trains[number] = self
     register_instance
+    validate!
   end
 
   def self.find(number)
     @@trains.fetch(number, nil)
+  end
+
+  def valid?
+    begin
+      validate!
+    rescue
+      false
+    end
   end
 
   def speed_up(speed)
@@ -93,7 +108,18 @@ class Train
   end
 
   def correct_wagon_type
-    # Переопределяется в дочерних классах
+    raise NotImplementedError
   end
 
+  def correct_train_type
+    raise NotImplementedError
+  end
+
+  def validate!
+    raise ValidationError, "Number can't be nil" if number.nil?
+    raise ValidationError, "Train number should be 6 symbols" unless number.length == 6
+    raise ValidationError, "Train number has invalid format" if number !~ NUMBER_FORMAT_PATTERN
+    raise ValidationError, "Wrong train type: \"#{@type}\"" unless POSSIBLE_TRAIN_TYPES.include?(correct_train_type)
+    true
+  end
 end
