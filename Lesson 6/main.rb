@@ -21,27 +21,31 @@ class Main
   def ask_action
     loop do
       show_possible_actions
-      choice = gets.chomp
-      case choice
-        when '0' then show_possible_actions
-        when '1' then create_station
-        when '2' then create_passenger_train
-        when '3' then create_cargo_train
-        when '4' then route_create
-        when '5' then route_add_station
-        when '6' then route_remove_station
-        when '7' then route_set_to_train
-        when '8' then add_train_wagon
-        when '9' then remove_train_wagon
-        when '10' then train_move_forward
-        when '11' then train_move_backward
-        when '12' then show_trains_in_station
-        when '13' then create_wagon
-        when '14' then print_wagons
-        else
-          break
+      begin
+        choice = gets.chomp
+        case choice
+          when '0' then show_possible_actions
+          when '1' then create_station
+          when '2' then create_passenger_train
+          when '3' then create_cargo_train
+          when '4' then route_create
+          when '5' then route_add_station
+          when '6' then route_remove_station
+          when '7' then route_set_to_train
+          when '8' then add_train_wagon
+          when '9' then remove_train_wagon
+          when '10' then train_move_forward
+          when '11' then train_move_backward
+          when '12' then show_trains_in_station
+          when '13' then create_wagon
+          when '14' then print_wagons
+          else
+            break
+        end
+        puts '...'
+      rescue => e
+        puts "::ERROR:: #{e.message}"
       end
-      puts '...'
     end
   end
 
@@ -51,23 +55,25 @@ class Main
     station = Station.new(station_title)
     @stations << station
 
-    puts "Station #{station.name} created."
+    puts "Station #{station.name} created." if station.valid?
   end
 
   def create_passenger_train
     puts 'Enter a passenger train number: '
     number = gets.chomp
-    train = PassengerTrain.new(number, 'Passenger')
+    train = PassengerTrain.new(number)
     @trains << train
-    puts "#{train.type} train No #{train.number} successfully created!"
+
+    puts "#{train.type} train No #{train.number} successfully created!" if train.valid?
   end
 
   def create_cargo_train
     puts 'Enter a cargo train number: '
     number = gets.chomp
-    train = CargoTrain.new(number, 'Cargo')
+    train = CargoTrain.new(number)
     @trains << train
-    puts "#{train.type} train No #{train.number} successfully created!"
+
+    puts "#{train.type} train No #{train.number} successfully created!" if train.valid?
   end
 
   def create_wagon
@@ -97,7 +103,7 @@ class Main
         if station2 != station1
           route = Route.new(station1, station2)
           @routes << route
-          puts "#{route.title} successfully created!"
+          puts "#{route.title} successfully created!" if route.valid?
           break
         else
           puts "You can't set second station same as first."
@@ -111,6 +117,7 @@ class Main
     if route
       station = select_station
       route.add_intermediate_station(station) if station
+      puts "Station '#{station.name}' successfully added to route"
     end
   end
 
@@ -175,7 +182,7 @@ class Main
   def show_trains_in_station
     station = select_station
     if station
-      puts "List of trains on #{station.title} station:"
+      puts "List of trains on #{station.name} station:"
       station.show_all_trains
     end
   end
@@ -231,13 +238,17 @@ class Main
   end
 
   def select_station
-    puts 'Choose station:'
-    print_stations
-    user_choice = gets.to_i
-    if user_choice <= @stations.size
-      @stations[user_choice - 1]
+    if @stations.size > 0
+      puts 'Choose station:'
+      print_stations
+      user_choice = gets.to_i
+      if user_choice <= @stations.size
+        @stations[user_choice - 1]
+      else
+        puts 'Choose a correct number for station'
+      end
     else
-      puts 'Choose a correct number for station'
+      puts 'There is no any station!'
     end
   end
 

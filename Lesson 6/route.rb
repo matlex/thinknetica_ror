@@ -45,7 +45,7 @@ class Route
 
   def validate!
     raise ValidationError, "Start station should be a '#{ CORRECT_STATION_TYPE }' class" if !stations.first.is_a?(CORRECT_STATION_TYPE) || stations.first.nil?
-    raise ValidationError, "End station should be a '#{ CORRECT_STATION_TYPE }' class" if !stations.last.is_a?(correct_station_type) || stations.last.nil?
+    raise ValidationError, "End station should be a '#{ CORRECT_STATION_TYPE }' class" if !stations.last.is_a?(CORRECT_STATION_TYPE) || stations.last.nil?
     true
   end
 end

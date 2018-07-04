@@ -10,6 +10,7 @@ class Train
   POSSIBLE_TRAIN_TYPES = ['Passenger', 'Cargo']
 
   NUMBER_FORMAT_PATTERN = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i
+  TRAIN_NUMBER_LENGTH = 5
 
   @@trains = {}
 
@@ -112,7 +113,7 @@ class Train
 
   def validate!
     raise ValidationError, "Number can't be nil" if number.nil?
-    raise ValidationError, "Train number should be 6 symbols" unless number.length == 6
+    raise ValidationError, "Train number should be #{ TRAIN_NUMBER_LENGTH } symbols" if number.length < TRAIN_NUMBER_LENGTH
     raise ValidationError, "Train number has invalid format" if number !~ NUMBER_FORMAT_PATTERN
     raise ValidationError, "Wrong train type: \"#{@type}\"" unless POSSIBLE_TRAIN_TYPES.include?(correct_train_type)
     true
