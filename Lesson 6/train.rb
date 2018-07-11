@@ -20,8 +20,8 @@ class Train
     @wagons = []
     @current_speed = 0
     @@trains[number] = self
-    register_instance
     validate!
+    register_instance
   end
 
   def self.find(number)

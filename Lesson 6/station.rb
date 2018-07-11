@@ -17,8 +17,8 @@ class Station
     @name = name
     @trains = []
     @@all_stations += 1
-    register_instance
     validate!
+    register_instance
   end
 
   def valid?
