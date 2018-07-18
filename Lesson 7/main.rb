@@ -10,6 +10,8 @@ class Main
     @trains = []
     @routes = []
     @wagons = []
+
+    add_mocks
   end
 
   def run
@@ -18,27 +20,40 @@ class Main
 
   private
 
+  def add_mocks
+    @stations << Station.new('Bishkek')
+    @stations << Station.new('Almaty')
+
+    @trains << PassengerTrain.new('AAA-01')
+    @trains << CargoTrain.new('BBB-02')
+
+    @wagons << PassengerWagon.new(30)
+    @wagons << CargoWagon.new(500)
+  end
+
   def ask_action
     loop do
       show_possible_actions
       begin
         choice = gets.chomp
         case choice
-          when '0' then show_possible_actions
-          when '1' then create_station
-          when '2' then create_passenger_train
-          when '3' then create_cargo_train
-          when '4' then route_create
-          when '5' then route_add_station
-          when '6' then route_remove_station
-          when '7' then route_set_to_train
-          when '8' then add_train_wagon
-          when '9' then remove_train_wagon
+          when '0'  then show_possible_actions
+          when '1'  then create_station
+          when '2'  then create_passenger_train
+          when '3'  then create_cargo_train
+          when '4'  then route_create
+          when '5'  then route_add_station
+          when '6'  then route_remove_station
+          when '7'  then route_set_to_train
+          when '8'  then add_train_wagon
+          when '9'  then remove_train_wagon
           when '10' then train_move_forward
           when '11' then train_move_backward
           when '12' then show_trains_in_station
           when '13' then create_wagon
-          when '14' then print_wagons
+          when '14' then print_all_wagons
+          when '15' then show_train_wagons
+          when '16' then reserve_seat_or_volume_in_wagon
           else
             break
         end
@@ -81,9 +96,13 @@ class Main
     wagon_type = gets.chomp
     case wagon_type
       when 'a'
-        @wagons << CargoWagon.new
+        puts 'What is a volume of Cargo wagon should be?'
+        volume = gets.chomp
+        @wagons << CargoWagon.new(volume.to_i)
       when 'b'
-        @wagons << PassengerWagon.new
+        puts 'How many seats in Passenger wagon should be?'
+        seats = gets.chomp
+        @wagons << PassengerWagon.new(seats.to_i)
       else
         puts 'Choose right type of wagon'
         return
@@ -147,10 +166,28 @@ class Main
     train = select_train
     if train
       wagon = select_wagon
-      if train.class == CargoTrain && wagon.class == CargoWagon
-        train.add_wagon(wagon)
-      else
-        train.add_wagon(wagon)
+      case train
+        when CargoTrain
+          puts 'Wrong wagon type!' unless wagon.class == CargoWagon
+        when PassengerTrain
+          puts 'Wrong wagon type!' unless wagon.class == PassengerWagon
+      end
+      train.add_wagon(wagon)
+    end
+  end
+
+  def reserve_seat_or_volume_in_wagon
+    wagon = select_wagon
+    if wagon
+      case wagon
+        when CargoWagon
+          puts 'How many volume to reserve?'
+          volume = gets.chomp
+          wagon.reserve_volume!(volume.to_i)
+          puts 'Done!'
+        when PassengerWagon
+          wagon.reserve_seat!
+          puts 'Done!'
       end
     end
   end
@@ -183,11 +220,23 @@ class Main
     station = select_station
     if station
       puts "List of trains on #{station.name} station:"
-      station.show_all_trains
+      station.iterate_trains { |train, index| puts "#{index}: #{train.number} -- #{train.type}, total wagons: #{train.wagons_count}" }
     end
   end
 
-  # Helpers
+  def show_train_wagons
+    train = select_train
+    if train
+      case train
+        when PassengerTrain
+          train.iterate_wagons { |wagon, index| print_passenger_wagon_info(wagon: wagon, index: index) }
+        when CargoTrain
+          train.iterate_wagons { |wagon, index| print_cargo_wagon_info(wagon: wagon, index: index) }
+      end
+    end
+  end
+
+# Helpers
   def print_stations
     @stations.each.with_index(1) {|station, index| puts "#{index}: #{station.name}"}
   end
@@ -200,8 +249,22 @@ class Main
     @trains.each.with_index(1) {|train, index| puts "#{index}: #{train.number}: #{train.type}"}
   end
 
-  def print_wagons
-    @wagons.each.with_index(1) {|wagon, index| puts "#{index}: #{wagon.class.name}"}
+  def print_all_wagons
+    @wagons.each.with_index(1) do |wagon, index|
+      if wagon.class == CargoWagon
+        print_cargo_wagon_info(wagon: wagon, index: index)
+      elsif wagon.class == PassengerWagon
+        print_passenger_wagon_info(wagon: wagon, index: index)
+      end
+    end
+  end
+
+  def print_cargo_wagon_info(wagon:, index:)
+    puts "#{index}: #{wagon.class.name}, total volume: #{wagon.total_volume}, reserved volume: #{wagon.reserved_volume}, free volume: #{wagon.free_volume}"
+  end
+
+  def print_passenger_wagon_info(wagon:, index:)
+    puts "#{index}: #{wagon.class.name}, total seats: #{wagon.total_seats}, reserved seats: #{wagon.reserved_seats}, free seats: #{wagon.free_seats}"
   end
 
   def show_possible_actions
@@ -222,6 +285,8 @@ class Main
     puts 'Enter 12 to print out stations and trains lists'
     puts 'Enter 13 to create wagon'
     puts 'Enter 14 to print out wagons list'
+    puts 'Enter 15 to show train wagons'
+    puts 'Enter 16 to reserve seat or volume in train wagon'
     puts 'Enter 0 to show menu again'
     puts 'Enter anything else to exit'
   end
@@ -276,7 +341,7 @@ class Main
 
   def select_wagon
     puts 'Choose wagon:'
-    print_wagons
+    print_all_wagons
     user_choice = gets.to_i
     if user_choice <= @wagons.size
       @wagons[user_choice - 1]
