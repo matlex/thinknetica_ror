@@ -1,6 +1,8 @@
 require_relative 'wagon'
 
 class PassengerWagon < Wagon
+  attr_reader :total_seats, :reserved_seats
+
   def initialize(total_seats)
     @total_seats = total_seats
     @reserved_seats = 0
@@ -12,11 +14,7 @@ class PassengerWagon < Wagon
     end
   end
 
-  def total_reserved_seats
-    @reserved_seats
-  end
-
-  def total_free_seats
+  def free_seats
     @total_seats - @reserved_seats
   end
 end
