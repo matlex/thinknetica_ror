@@ -60,6 +60,10 @@ class Train
     end
   end
 
+  def wagons_count
+    @wagons.size
+  end
+
   def current_station
     @route.stations[@current_station_index]
   end
@@ -85,6 +89,10 @@ class Train
       @current_station_index -= 1
       current_station.add(self)
     end
+  end
+
+  def iterate_wagons
+    @wagons.each.with_index(1) { |wagon, index| yield(wagon, index) } if @wagons.any?
   end
 
   protected
