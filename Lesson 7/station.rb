@@ -51,6 +51,10 @@ class Station
     @trains.select { |train| train.type == type }.size
   end
 
+  def iterate_trains
+    @trains.each.with_index(1) { |train, index| yield(train, index) }
+  end
+
   def validate!
     raise ValidationError, "Number can't be nil" if name.nil?
     raise ValidationError, "Station title should be at least 3 symbols" if name.length < 3
