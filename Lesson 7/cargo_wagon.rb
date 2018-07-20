@@ -1,20 +1,8 @@
 require_relative 'wagon'
 
 class CargoWagon < Wagon
-  attr_reader :total_volume, :reserved_volume
-
-  def initialize(total_volume)
-    @total_volume = total_volume
-    @reserved_volume = 0
-  end
-
-  def reserve_volume!(amount)
-    if amount <= free_volume
-      @reserved_volume += amount
-    end
-  end
-
-  def free_volume
-    @total_volume - @reserved_volume
-  end
+  alias_method :total_volume, :total_capacity
+  alias_method :reserved_volume, :reserved_capacity
+  alias_method :reserve_volume!, :reserve_capacity!
+  alias_method :free_volume, :free_capacity
 end
