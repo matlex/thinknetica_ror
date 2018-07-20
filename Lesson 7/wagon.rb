@@ -14,7 +14,7 @@ class Wagon
     @total_capacity - @reserved_capacity
   end
 
-  def reserve_capacity!(amount=1)
+  def reserve_capacity!(amount)
     if amount <= free_capacity
       @reserved_capacity += amount
     end
