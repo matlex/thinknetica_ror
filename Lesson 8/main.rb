@@ -4,7 +4,6 @@ require_relative 'cargo_train'
 require_relative 'route'
 
 class Main
-
   def initialize
     @stations = []
     @trains = []
@@ -37,25 +36,25 @@ class Main
       begin
         choice = gets.chomp
         case choice
-          when '0'  then show_possible_actions
-          when '1'  then create_station
-          when '2'  then create_passenger_train
-          when '3'  then create_cargo_train
-          when '4'  then route_create
-          when '5'  then route_add_station
-          when '6'  then route_remove_station
-          when '7'  then route_set_to_train
-          when '8'  then add_train_wagon
-          when '9'  then remove_train_wagon
-          when '10' then train_move_forward
-          when '11' then train_move_backward
-          when '12' then show_trains_in_station
-          when '13' then create_wagon
-          when '14' then print_all_wagons
-          when '15' then show_train_wagons
-          when '16' then reserve_seat_or_volume_in_wagon
-          else
-            break
+        when '0'  then show_possible_actions
+        when '1'  then create_station
+        when '2'  then create_passenger_train
+        when '3'  then create_cargo_train
+        when '4'  then route_create
+        when '5'  then route_add_station
+        when '6'  then route_remove_station
+        when '7'  then route_set_to_train
+        when '8'  then add_train_wagon
+        when '9'  then remove_train_wagon
+        when '10' then train_move_forward
+        when '11' then train_move_backward
+        when '12' then show_trains_in_station
+        when '13' then create_wagon
+        when '14' then print_all_wagons
+        when '15' then show_train_wagons
+        when '16' then reserve_space_in_wagon
+        else
+          break
         end
         puts '...'
       rescue => e
@@ -95,17 +94,17 @@ class Main
     puts 'What type of wagon you want create? a: CargoWagon, b: PassengerWagon'
     wagon_type = gets.chomp
     case wagon_type
-      when 'a'
-        puts 'What is a volume of Cargo wagon should be?'
-        volume = gets.chomp
-        @wagons << CargoWagon.new(volume.to_i)
-      when 'b'
-        puts 'How many seats in Passenger wagon should be?'
-        seats = gets.chomp
-        @wagons << PassengerWagon.new(seats.to_i)
-      else
-        puts 'Choose right type of wagon'
-        return
+    when 'a'
+      puts 'What is a volume of Cargo wagon should be?'
+      volume = gets.chomp
+      @wagons << CargoWagon.new(volume.to_i)
+    when 'b'
+      puts 'How many seats in Passenger wagon should be?'
+      seats = gets.chomp
+      @wagons << PassengerWagon.new(seats.to_i)
+    else
+      puts 'Choose right type of wagon'
+      return
     end
     puts 'Wagon successfully created'
   end
@@ -167,27 +166,27 @@ class Main
     if train
       wagon = select_wagon
       case train
-        when CargoTrain
-          puts 'Wrong wagon type!' unless wagon.class == CargoWagon
-        when PassengerTrain
-          puts 'Wrong wagon type!' unless wagon.class == PassengerWagon
+      when CargoTrain
+        puts 'Wrong wagon type!' unless wagon.class == CargoWagon
+      when PassengerTrain
+        puts 'Wrong wagon type!' unless wagon.class == PassengerWagon
       end
       train.add_wagon(wagon)
     end
   end
 
-  def reserve_seat_or_volume_in_wagon
+  def reserve_space_in_wagon
     wagon = select_wagon
     if wagon
       case wagon
-        when CargoWagon
-          puts 'How many volume to reserve?'
-          volume = gets.chomp
-          wagon.reserve_volume!(volume.to_i)
-          puts 'Done!'
-        when PassengerWagon
-          wagon.reserve_seat!
-          puts 'Done!'
+      when CargoWagon
+        puts 'How many volume to reserve?'
+        volume = gets.chomp
+        wagon.reserve_volume!(volume.to_i)
+        puts 'Done!'
+      when PassengerWagon
+        wagon.reserve_seat!
+        puts 'Done!'
       end
     end
   end
@@ -228,25 +227,25 @@ class Main
     train = select_train
     if train
       case train
-        when PassengerTrain
-          train.iterate_wagons { |wagon, index| print_passenger_wagon_info(wagon: wagon, index: index) }
-        when CargoTrain
-          train.iterate_wagons { |wagon, index| print_cargo_wagon_info(wagon: wagon, index: index) }
+      when PassengerTrain
+        train.iterate_wagons { |wagon, index| print_passenger_wagon_info(wagon: wagon, index: index) }
+      when CargoTrain
+        train.iterate_wagons { |wagon, index| print_cargo_wagon_info(wagon: wagon, index: index) }
       end
     end
   end
 
-# Helpers
+  # Helpers
   def print_stations
-    @stations.each.with_index(1) {|station, index| puts "#{index}: #{station.name}"}
+    @stations.each.with_index(1) { |station, index| puts "#{index}: #{station.name}" }
   end
 
   def print_routes
-    @routes.each.with_index(1) {|route, index| puts "#{index}: #{route.title}"}
+    @routes.each.with_index(1) { |route, index| puts "#{index}: #{route.title}" }
   end
 
   def print_trains
-    @trains.each.with_index(1) {|train, index| puts "#{index}: #{train.number}: #{train.type}"}
+    @trains.each.with_index(1) { |train, index| puts "#{index}: #{train.number}: #{train.type}" }
   end
 
   def print_all_wagons
@@ -269,7 +268,7 @@ class Main
 
   def show_possible_actions
     puts
-    puts "Please choose one of actions listed below:"
+    puts 'Please choose one of actions listed below:'
     puts
     puts 'Enter 1 to create a station'
     puts 'Enter 2 to create a passenger train'
@@ -303,7 +302,7 @@ class Main
   end
 
   def select_station
-    if @stations.size > 0
+    if !@stations.empty?
       puts 'Choose station:'
       print_stations
       user_choice = gets.to_i
@@ -351,6 +350,4 @@ class Main
   end
 end
 
-if __FILE__ == $0
-  Main.new.run
-end
+Main.new.run if $PROGRAM_NAME == __FILE__

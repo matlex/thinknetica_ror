@@ -5,12 +5,12 @@ class Train
   include InstanceCounter
   include CustomErrors
 
-  attr_reader :type, :number, :wagons, :current_speed
-
-  POSSIBLE_TRAIN_TYPES = ['Passenger', 'Cargo']
+  POSSIBLE_TRAIN_TYPES = %w[Passenger Cargo].freeze
 
   NUMBER_FORMAT_PATTERN = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i
   TRAIN_NUMBER_LENGTH = 5
+
+  attr_reader :type, :number, :wagons, :current_speed
 
   @@trains = {}
 
@@ -29,11 +29,9 @@ class Train
   end
 
   def valid?
-    begin
-      validate!
-    rescue
-      false
-    end
+    validate!
+  rescue
+    false
   end
 
   def speed_up(speed)
@@ -49,15 +47,11 @@ class Train
   end
 
   def add_wagon(wagon)
-    if @current_speed == 0 && correct_type?(wagon)
-      @wagons << wagon
-    end
+    @wagons << wagon if @current_speed == 0 && correct_type?(wagon)
   end
 
   def remove_wagon
-    if @current_speed == 0 && !@wagons.empty?
-      @wagons.pop
-    end
+    @wagons.pop if @current_speed == 0 && !@wagons.empty?
   end
 
   def wagons_count
@@ -96,15 +90,14 @@ class Train
   end
 
   protected
+
   # Выносим методы т.к. они не будут вызываться клиентом, а используются только внутри текущего класса и его наследников
   def next_station
     @route.stations[@current_station_index + 1] if @route
   end
 
   def previous_station
-    if @route && current_station != @route.stations.first
-      @route.stations[@current_station_index - 1]
-    end
+    @route.stations[@current_station_index - 1] if @route && current_station != @route.stations.first
   end
 
   def correct_type?(wagon)
@@ -121,8 +114,8 @@ class Train
 
   def validate!
     raise ValidationError, "Number can't be nil" if number.nil?
-    raise ValidationError, "Train number should be #{ TRAIN_NUMBER_LENGTH } symbols" if number.length < TRAIN_NUMBER_LENGTH
-    raise ValidationError, "Train number has invalid format" if number !~ NUMBER_FORMAT_PATTERN
+    raise ValidationError, "Train number should be #{TRAIN_NUMBER_LENGTH} symbols" if number.length < TRAIN_NUMBER_LENGTH
+    raise ValidationError, 'Train number has invalid format' if number !~ NUMBER_FORMAT_PATTERN
     raise ValidationError, "Wrong train type: \"#{@type}\"" unless POSSIBLE_TRAIN_TYPES.include?(correct_train_type)
     true
   end

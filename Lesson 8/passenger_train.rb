@@ -2,8 +2,7 @@ require_relative 'train'
 require_relative 'passenger_wagon'
 
 class PassengerTrain < Train
-
-  TRAIN_TYPE         = 'Passenger'
+  TRAIN_TYPE         = 'Passenger'.freeze
   CORRECT_WAGON_TYPE = PassengerWagon
 
   def initialize(number)

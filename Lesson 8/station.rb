@@ -22,11 +22,9 @@ class Station
   end
 
   def valid?
-    begin
-      validate!
-    rescue
-      false
-    end
+    validate!
+  rescue ValidationError
+    false
   end
 
   def add(train)
@@ -57,7 +55,7 @@ class Station
 
   def validate!
     raise ValidationError, "Number can't be nil" if name.nil?
-    raise ValidationError, "Station title should be at least 3 symbols" if name.length < 3
+    raise ValidationError, 'Station title should be at least 3 symbols' if name.length < 3
     true
   end
 end

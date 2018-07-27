@@ -5,9 +5,9 @@ class Route
   include InstanceCounter
   include CustomErrors
 
-  attr_reader :stations, :title
-
   CORRECT_STATION_TYPE = Station
+
+  attr_reader :stations, :title
 
   def initialize(start_station, end_station)
     @stations = [start_station, end_station]
@@ -18,11 +18,9 @@ class Route
   end
 
   def valid?
-    begin
-      validate!
-    rescue
-      false
-    end
+    validate!
+  rescue ValidationError
+    false
   end
 
   def show_stations
@@ -34,9 +32,7 @@ class Route
   end
 
   def remove_intermediate_station(station)
-    if not [@stations.first, @stations.last].include? station
-      @stations.delete(station)
-    end
+    @stations.delete(station) unless [@stations.first, @stations.last].include? station
   end
 
   def count_stations
@@ -44,8 +40,8 @@ class Route
   end
 
   def validate!
-    raise ValidationError, "Start station should be a '#{ CORRECT_STATION_TYPE }' class" if !stations.first.is_a?(CORRECT_STATION_TYPE) || stations.first.nil?
-    raise ValidationError, "End station should be a '#{ CORRECT_STATION_TYPE }' class" if !stations.last.is_a?(CORRECT_STATION_TYPE) || stations.last.nil?
+    raise ValidationError, "Start station should be a '#{CORRECT_STATION_TYPE}' class" if !stations.first.is_a?(CORRECT_STATION_TYPE) || stations.first.nil?
+    raise ValidationError, "End station should be a '#{CORRECT_STATION_TYPE}' class" if !stations.last.is_a?(CORRECT_STATION_TYPE) || stations.last.nil?
     true
   end
 end

@@ -1,7 +1,7 @@
 module InstanceCounter
   def self.included(base)
-    base.extend ClassMethods  # Подключаем методы класса без указания неймспейса
-    base.send :include, InstanceMethods  # include является приватным методом класса, и поэтому нужно использовать send                                                                  # метод send (отправка сообщения/вызов метода).
+    base.extend ClassMethods # Add class methods without namespace declaring
+    base.send :include, InstanceMethods # :include is a private class method, therefore we have to use base.send                                                             # метод send (отправка сообщения/вызов метода).
   end
 
   module ClassMethods
@@ -18,7 +18,6 @@ module InstanceCounter
   end
 
   module InstanceMethods
-
     private
 
     def register_instance

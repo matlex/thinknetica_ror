@@ -1,9 +1,9 @@
 require_relative 'manufacturer'
 
 class Wagon
-  attr_reader :total_capacity, :reserved_capacity
-
   include Manufacturer
+
+  attr_reader :total_capacity, :reserved_capacity
 
   def initialize(total_capacity)
     @total_capacity = total_capacity
@@ -15,9 +15,6 @@ class Wagon
   end
 
   def reserve_capacity!(amount)
-    if amount <= free_capacity
-      @reserved_capacity += amount
-    end
+    @reserved_capacity += amount if amount <= free_capacity
   end
-
 end
