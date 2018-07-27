@@ -53,7 +53,7 @@ class Main
           when '13' then create_wagon
           when '14' then print_all_wagons
           when '15' then show_train_wagons
-          when '16' then reserve_seat_or_volume_in_wagon
+          when '16' then reserve_space_in_wagon
           else
             break
         end
@@ -176,7 +176,7 @@ class Main
     end
   end
 
-  def reserve_seat_or_volume_in_wagon
+  def reserve_space_in_wagon
     wagon = select_wagon
     if wagon
       case wagon

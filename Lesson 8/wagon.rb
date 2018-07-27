@@ -1,9 +1,9 @@
 require_relative 'manufacturer'
 
 class Wagon
-  attr_reader :total_capacity, :reserved_capacity
-
   include Manufacturer
+
+  attr_reader :total_capacity, :reserved_capacity
 
   def initialize(total_capacity)
     @total_capacity = total_capacity

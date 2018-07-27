@@ -5,12 +5,12 @@ class Train
   include InstanceCounter
   include CustomErrors
 
-  attr_reader :type, :number, :wagons, :current_speed
-
-  POSSIBLE_TRAIN_TYPES = ['Passenger', 'Cargo']
+  POSSIBLE_TRAIN_TYPES = %w(Passenger Cargo)
 
   NUMBER_FORMAT_PATTERN = /^[a-z0-9]{3}-?[a-z0-9]{2}$/i
   TRAIN_NUMBER_LENGTH = 5
+
+  attr_reader :type, :number, :wagons, :current_speed
 
   @@trains = {}
 

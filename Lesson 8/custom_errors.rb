@@ -1,5 +1,4 @@
 module CustomErrors
-  class ValidationError < StandardError
-  end
+  # https://github.com/rubocop-hq/ruby-style-guide#single-line-classes
+  ValidationError = Class.new(StandardError)
 end
-

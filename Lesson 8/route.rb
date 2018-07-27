@@ -5,9 +5,9 @@ class Route
   include InstanceCounter
   include CustomErrors
 
-  attr_reader :stations, :title
-
   CORRECT_STATION_TYPE = Station
+
+  attr_reader :stations, :title
 
   def initialize(start_station, end_station)
     @stations = [start_station, end_station]
@@ -34,7 +34,7 @@ class Route
   end
 
   def remove_intermediate_station(station)
-    if not [@stations.first, @stations.last].include? station
+    unless [@stations.first, @stations.last].include? station
       @stations.delete(station)
     end
   end
