@@ -55,27 +55,3 @@ module Validation
 
   end
 end
-
-
-
-class Test
-  include Validation
-
-  attr_accessor :a, :b, :c
-
-  validate :a, :presence, :and_something
-  validate :b, :format, /[A-Z]{1,3}/
-  validate :c, :type, String
-
-end
-
-if __FILE__ == $0
-  t = Test.new
-
-  t.a = "some value"
-  t.b = "ABC"
-  t.c = '123'
-
-  t.validate!
-
-end
