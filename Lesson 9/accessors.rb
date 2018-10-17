@@ -37,7 +37,7 @@ module Accessors
         if value.is_a?(class_type)
           instance_variable_set("@#{attr_name}", value)
         else
-          raise TypeError, 'Invalid class type!'
+          raise TypeError, "Invalid class type! Should be #{class_type}"
         end
       end
 

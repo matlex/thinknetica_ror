@@ -2,8 +2,13 @@ require_relative 'station'
 require_relative 'passenger_train'
 require_relative 'cargo_train'
 require_relative 'route'
+require_relative 'custom_errors'
+
+require 'pry'
 
 class Main
+  include CustomErrors
+
   def initialize
     @stations = []
     @trains = []
@@ -20,14 +25,22 @@ class Main
   private
 
   def add_mocks
-    @stations << Station.new('Bishkek')
-    @stations << Station.new('Almaty')
+    @s1 = Station.new('Bishkek')
+    @s2 = Station.new('Almaty')
+    @stations << @s1
+    @stations << @s2
 
-    @trains << PassengerTrain.new('AAA-01')
-    @trains << CargoTrain.new('BBB-02')
+    @t1 = PassengerTrain.new('AAA-01')
+    @t2 = CargoTrain.new('BBB-02')
+    @trains << @t1
+    @trains << @t2
 
-    @wagons << PassengerWagon.new(30)
-    @wagons << CargoWagon.new(500)
+    @w1 = PassengerWagon.new(30)
+    @w2 = CargoWagon.new(500)
+    @wagons << @w1
+    @wagons << @w2
+
+    @r1 = Route.new(@s1, @s2)
   end
 
   def ask_action
@@ -53,6 +66,9 @@ class Main
         when '14' then print_all_wagons
         when '15' then show_train_wagons
         when '16' then reserve_space_in_wagon
+        when '17' then change_station_name
+        when '18' then show_station_names_history
+        when '-1' then run_debugger
         else
           break
         end
@@ -61,6 +77,23 @@ class Main
         puts "::ERROR:: #{e.message}"
       end
     end
+  end
+
+  def run_debugger
+    binding.pry
+  end
+
+  def show_station_names_history
+    station = select_station
+    print station.name_history
+  end
+
+  def change_station_name
+    station = select_station
+    puts 'Enter a new station name:'
+    new_name = gets.chomp
+    station.name = new_name
+    puts 'New station name successfully changed'
   end
 
   def create_station
@@ -286,7 +319,10 @@ class Main
     puts 'Enter 14 to print out wagons list'
     puts 'Enter 15 to show train wagons'
     puts 'Enter 16 to reserve seat or volume in train wagon'
+    puts 'Enter 17 to change station name'
+    puts 'Enter 18 to show station names history'
     puts 'Enter 0 to show menu again'
+    puts 'Enter -1 to run debugger'
     puts 'Enter anything else to exit'
   end
 
@@ -350,4 +386,4 @@ class Main
   end
 end
 
-Main.new.run if $PROGRAM_NAME == __FILE__
+Main.new.run if __FILE__ == $0

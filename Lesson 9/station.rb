@@ -1,11 +1,14 @@
 require_relative 'instance_counter'
 require_relative 'custom_errors'
+require_relative 'accessors'
 
 class Station
   include InstanceCounter
   include CustomErrors
+  include Accessors
 
-  attr_reader :name, :trains
+  attr_reader :trains
+  attr_accessor_with_history :name
 
   @@all_stations = 0
 
