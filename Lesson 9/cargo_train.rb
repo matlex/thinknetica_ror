@@ -1,9 +1,7 @@
 require_relative 'train'
-require_relative 'cargo_wagon'
 
 class CargoTrain < Train
   TRAIN_TYPE         = 'Cargo'.freeze
-  CORRECT_WAGON_TYPE = CargoWagon
 
   def initialize(number)
     super(number, TRAIN_TYPE)
@@ -15,7 +13,4 @@ class CargoTrain < Train
     TRAIN_TYPE
   end
 
-  def correct_wagon_type
-    CORRECT_WAGON_TYPE
-  end
 end

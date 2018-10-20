@@ -47,11 +47,17 @@ class Train
   end
 
   def add_wagon(wagon)
-    @wagons << wagon if @current_speed == 0 && correct_type?(wagon)
+    if @current_speed == 0
+      wagon.train = self  # Duck typing
+      @wagons << wagon
+    end
   end
 
   def remove_wagon
-    @wagons.pop if @current_speed == 0 && !@wagons.empty?
+    if @current_speed == 0 && !@wagons.empty?
+      wagon = @wagons.pop
+      wagon.train = nil
+    end
   end
 
   def wagons_count
@@ -98,14 +104,6 @@ class Train
 
   def previous_station
     @route.stations[@current_station_index - 1] if @route && current_station != @route.stations.first
-  end
-
-  def correct_type?(wagon)
-    wagon.is_a?(correct_wagon_type)
-  end
-
-  def correct_wagon_type
-    raise NotImplementedError
   end
 
   def correct_train_type

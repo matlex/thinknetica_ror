@@ -34,7 +34,7 @@ module Accessors
       define_method(attr_name) { instance_variable_get("@#{attr_name}") }  # Геттер
 
       define_method("#{attr_name}=") do |value|  # Сеттер
-        if value.is_a?(class_type)
+        if [class_type, NilClass].include?(value.class)
           instance_variable_set("@#{attr_name}", value)
         else
           raise TypeError, "Invalid class type! Should be #{class_type}"
