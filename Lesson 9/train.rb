@@ -1,9 +1,11 @@
 require_relative 'instance_counter'
 require_relative 'custom_errors'
+require_relative 'accessors'
 
 class Train
   include InstanceCounter
   include CustomErrors
+  include Accessors
 
   POSSIBLE_TRAIN_TYPES = %w[Passenger Cargo].freeze
 
@@ -11,6 +13,7 @@ class Train
   TRAIN_NUMBER_LENGTH = 5
 
   attr_reader :type, :number, :wagons, :current_speed
+  attr_accessor_with_history :color
 
   @@trains = {}
 
@@ -22,6 +25,10 @@ class Train
     @@trains[number] = self
     validate!
     register_instance
+  end
+
+  def show_color_history
+    @color_history
   end
 
   def self.find(number)
