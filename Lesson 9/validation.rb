@@ -41,7 +41,7 @@ module Validation
     private
 
     def presence(attr, _optional_attr)
-      raise ValidationError, "Value is nil or empty" if attr.nil? || attr.empty?
+      raise ValidationError, "Value is nil or empty" if attr.nil? || attr.to_s.empty?
     end
 
     def format(attr, regex_pattern)
