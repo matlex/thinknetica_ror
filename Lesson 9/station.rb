@@ -1,14 +1,21 @@
 require_relative 'instance_counter'
 require_relative 'custom_errors'
 require_relative 'accessors'
+require_relative 'validation'
 
 class Station
   include InstanceCounter
   include CustomErrors
   include Accessors
+  include Validation
+
+  STATION_NAME_FORMAT = /^[A-Z0-9]{3,}$/i
 
   attr_reader :trains
   attr_accessor_with_history :name
+
+  validate :name, :presence, :and_something
+  validate :name, :format, STATION_NAME_FORMAT
 
   @@all_stations = 0
 
@@ -56,9 +63,4 @@ class Station
     @trains.each.with_index(1) { |train, index| yield(train, index) }
   end
 
-  def validate!
-    raise ValidationError, "Number can't be nil" if name.nil?
-    raise ValidationError, 'Station title should be at least 3 symbols' if name.length < 3
-    true
-  end
 end
