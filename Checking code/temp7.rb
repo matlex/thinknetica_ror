@@ -1,6 +1,7 @@
 require_relative '../Lesson 9/accessors'
 require_relative '../Lesson 9/validation'
 
+require 'pry'
 
 # Testing Accessors module
 class TestAccessors
@@ -8,7 +9,7 @@ class TestAccessors
 
   attr_accessor_with_history :a, :b, :c
   strong_attr_accessor :e, String
-  strong_attr_accessor :d, Integer
+  strong_attr_accessor :d, Fixnum
 
 end
 
@@ -36,6 +37,7 @@ def testing_accessors_module
   test.e = 'Hello'
   puts test.e
 
+  # test.d = '123'
   test.d = 123
   puts test.d
 end
@@ -47,7 +49,7 @@ class TestValidations
   attr_accessor :a, :b, :c
 
   validate :a, :presence, :and_something
-  validate :b, :format, /[A-Z]{1,3}/
+  validate :b, :format, /^[A-Z0-9]{3,}$/i
   validate :c, :type, String
 
 end
@@ -57,7 +59,7 @@ def testing_validations_module
 
   t.a = "some value"
   # t.a = nil
-  t.b = "ABC"
+  t.b = "w1d"
   # t.b = "123"
   t.c = '123'
   # t.c = 123
