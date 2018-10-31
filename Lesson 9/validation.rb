@@ -7,11 +7,11 @@ module Validation
   end
 
   module ClassMethods
-    attr_reader :validations_for_attribute
+    attr_reader :validations
 
     def validate(attr_name, *params)
-      @validations_for_attribute ||= []
-      @validations_for_attribute << { attr_name.to_s => params }
+      @validations ||= []
+      @validations << {attr_name.to_s => params }
     end
 
   end

@@ -16,11 +16,12 @@ module Accessors
 
         define_method(attr_name) { instance_variable_get("@#{attr_name}") }
         define_method("#{attr_name}=") do |value|
-          instance_variable_set("@#{attr_name}", value)
 
           var_history_values = instance_variable_get("@#{attr_name}_history") || []
           var_history_values << value
           instance_variable_set("@#{attr_name}_history", var_history_values)
+
+          instance_variable_set("@#{attr_name}", value)
         end
       end
     end
