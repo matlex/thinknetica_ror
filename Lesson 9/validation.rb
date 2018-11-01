@@ -20,7 +20,7 @@ module Validation
     include CustomErrors
 
     def validate!
-      self.class.validations_for_attribute.each do |validation|
+      self.class.validations.each do |validation|
         validation.each do |name, params|
           method_name = params[0]
           value = instance_variable_get("@#{name}")
